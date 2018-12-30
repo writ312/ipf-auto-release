@@ -70,10 +70,11 @@ Muteki2ex
 * [tpIpfTool](https://github.com/kuronekotei/IpfTool/releases)
 * [ghr](https://github.com/tcnksm/ghr/releases)
 * [node.js](https://nodejs.org/ja/)
-
+* git bash
 が必要になります
-tpIpfToolおよびghrに関しては上記リンクにバイナリが公開されているので、パスが通っているフォルダに放り込んでください  
+tpIpfToolおよびghrに関しては上記リンクにバイナリが公開されているので、環境変数のパスが通っているフォルダに放り込んでください  
 node.jsはなるべく最新のバージョンを適当にインストールしておいてください
+また、`git push`はgit bashで実行してください(cmd.exe,powershellでは動きません)
 
 ## 使い方
 まずはGithub Releaseに放り込むために、トークンを取得します  
@@ -87,4 +88,4 @@ node.jsはなるべく最新のバージョンを適当にインストールし�
 `.git/hook/post-commit`  
 となるようにpost-commitを移動させてください  
 
-addons.jsonが更新し、コミットした時に処理が走り、自動でRelease生成とファイルのアップロードが始まります  
+addons.jsonを更新し、コミットした時に処理が走り、自動でRelease生成とファイルのアップロードが始まります  
