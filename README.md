@@ -51,6 +51,19 @@ Tos-Addon
 `src`フォルダの中それぞれのフォルダ作成し、lua,xmlを作成してください(名前は同一のものをつける)  
 今回の場合はautoreleaseフォルダの下にautorelease.luaがあり、autorelease2フォルダの下にautorelease2.luaがあるといった形です
 
+### addon.ipfとかある場合
+```
+Muteki2ex
+└─src
+    ├─addon_d.ipf
+    │  ├─muteki2ex
+    │  └─muteki2setting
+    └─ui.ipf
+        ├─baseskinset
+        └─skin
+
+```
+### 動きません。自力でパックしてください。でもリリースはghr使うと楽ですよ。
 
 ## 依存関係
 * [tpIpfTool](https://github.com/kuronekotei/IpfTool/releases)
