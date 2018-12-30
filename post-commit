@@ -1,0 +1,95 @@
+#!/usr/bin/env node
+const childProcessExec = require('child_process').exec;
+const util = require('util');
+const fs = require('fs')
+const path = require('path')
+const exec = util.promisify(childProcessExec);
+const __dir = path.join(__dirname,"../../")
+
+isUpdateAddonsjson();
+
+Date.prototype.now = function () {
+    function pad(number, length) {
+
+        var str = '' + number;
+        while (str.length < length) {
+            str = '0' + str;
+        }
+    
+        return str;
+    
+    }
+    var yyyy = (this.getYear()-100).toString();
+    var MM = pad(this.getMonth() + 1,2);
+    var dd = pad(this.getDate(), 2);
+    var hh = pad((this.getHours() >= 12)?this.getHours() -12:this.getHours(), 2);
+    var mm = pad(this.getMinutes(), 2)
+    return yyyy + MM + dd+  hh + mm;
+};
+
+async function isUpdateAddonsjson(){
+    let {stdout} = await exec('git show -- addons.json')
+    if(stdout){
+        let pre = await exec('git show HEAD~:addons.json')
+        let prejson = JSON.parse(pre.stdout).reduce((obj, item) => ({...obj, [item.name]: item}), {})
+        require(__dir+'/addons.json').forEach(postObj => {
+            let preObj = prejson[postObj.name]
+            if(!preObj)
+                console.log(postObj.name + ' is new addon')
+            else if(preObj.fileVersion === postObj.fileVersion)
+                return
+            else
+                console.log(postObj.name + ' is updalable')
+
+            if(!preObj)
+                console.log(' -> ' + postObj.fileVersion)
+            else if(!isFileVersionDiffrence(preObj.fileVersion,postObj.fileVersion))
+                return
+            else
+                console.log(preObj.fileVersion + ' -> ' + postObj.fileVersion)
+
+            uploadIpf(postObj)
+        });
+    }
+}
+
+async function uploadIpf(postObj){
+    let fileName = `${postObj.file}-${postObj.fileVersion}.ipf`
+    let findFile = await exec(`find -name ${postObj.file}.lua`)
+    if(!findFile.stdout){``
+        console.log(`not found ${postObj.file}.lua`)
+        return
+    }
+    let dirPath = path.join(__dir,findFile.stdout,'..')
+    let releaseTag = postObj.releaseTag
+    console.log('Packaging '+dirPath)
+    try{
+        fs.mkdirSync('ReleasedIPF')
+    }catch{
+
+    }
+    try{
+        await exec(`tpIpfTool ${dirPath}`)
+    }catch{
+
+    }
+    console.log('Packaging Success')
+    await exec(`rename _p${(new Date()).now()}* ${fileName}`)
+    console.log(`Uploading : ${fileName}. Tag : ${releaseTag}`)
+    await exec(`ghr ${releaseTag} ${fileName}`)
+    await exec(`move ${fileName} ReleasedIPF`)
+    console.log(`${fileName} move to ReleasedIPF`)
+    console.log(`UploadIPF is complite`)
+}
+
+function isFileVersionDiffrence(preVer,postVer){
+    let preVerArr = preVer.substr(1).split('.')
+    let postVerArr = postVer.substr(1).split('.')
+    for(let i = 0; i < preVerArr.length; i++){
+        if(Number(preVerArr[i]) > Number(postVerArr[i]))
+            return false
+        else if (Number(preVerArr[i]) < Number(postVerArr[i]))
+            return true
+    }
+    return false
+}
