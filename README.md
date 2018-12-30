@@ -5,10 +5,10 @@
 ## フォルダ構造
 Tos-Addonというリポジトリで管理していて、AutoReleaseというアドオン作っている場合は
 ```
-AutoRelease
-    │─README.md
-    │
-    └─autorelease
+Tos-Addon
+  └AutoRelease
+     │─README.md
+     └─autorelease
         └─autorelase.lua
         └─autorelase.xml
 ```
