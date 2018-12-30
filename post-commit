@@ -76,23 +76,24 @@ async function uploadIpf(postObj){
         await exec('mkdir ReleasedIPF')
     }catch{}
     let depth = 0
-    let tempDir = path.join(__dir,'ReleasedIPF',postObj.file)
+    let tempDirPath = path.join(__dir,'ReleasedIPF',postObj.file)
     try{
         if(dirPath.includes('\\src')){
-            let {srcDir , _depth} = getSrcDirPath(dirPath)
+            let {srcDirPath , _depth} = getSrcDirPath(dirPath)
+            dirPath = srcDirPath
             depth = _depth
-            await exec(`cp -r ${srcDir} ${tempDir}`)
-            dirPath = tempDir 
         }
+        await exec(`cp -r ${dirPath} ${tempDirPath}`)
         console.log(`Packaging ${fileName}`)
-        if(depth > 1)
+        if(depth > 1){
+            await exec(`rm -rf ${tempDirPath}`)
             return console.error('Error : Unsupported directory structure')
-        else        
-            await exec(`tpIpfTool ${dirPath}${(depth >= 1)?'/':''}`)
-        await exec(`rm -rf ${tempDir}`)
+        }else{        
+            await exec(`tpIpfTool ${tempDirPath}${(depth == 1)?'/':''}`)
+        }
+        await exec(`rm -rf ${tempDirPath}`)
     }catch{
-        if(depth != 0)
-            await exec(`rm -rf ${tempDir}`)
+        await exec(`rm -rf ${tempDirPath}`)
     }
     console.log('Packaging Success')
     await exec(`mv -f  _p${(new Date()).now()}* ReleasedIPF\\${fileName}`)
@@ -125,5 +126,5 @@ function getSrcDirPath(dirPath){
         arr.shift()
     }
     let depth = arr[0].match(/\\/gm).length
-    return {srcDir : path.join(dirPath,"\\..".repeat(depth)), _depth : depth}
+    return {srcDirPath : path.join(dirPath,"\\..".repeat(depth)), _depth : depth}
 }
