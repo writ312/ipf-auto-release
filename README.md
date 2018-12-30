@@ -3,12 +3,13 @@
 いくつか依存関係やフォルダ構造の制限があるため、それを許容できる場合に使用してください。
 
 ## フォルダ構造
+### IPF化するフォルダが一つの場合
 Tos-Addonというリポジトリで管理していて、AutoReleaseというアドオン作っている場合は
 ```
 Tos-Addon
   └AutoRelease
      │─README.md
-     └─autorelease
+     └─autorelease (or src)
         └─autorelase.lua
         └─autorelase.xml
 ```
@@ -29,8 +30,27 @@ Tos-Addon
     ]
 }
 ```
-気を付けていただくのは、*.luaの一つ上のディレクトリ名をaddons.jsonのfileの値と同じにしてください  
-nameとかreleaseTagとかは別にどうでもいいです  
+lua,xmlの名前をaddons.jsonのfileの値と同じにしてください  
+fileの値.luaというファイルを検索し、その一つ前のフォルダをコピー、パックし削除するため、luaの一つ前のフォルダ名は割とどうでもいいです  
+
+
+### IPF化するフォルダが複数ある場合
+```
+Tos-Addon
+  └AutoRelease
+     │─README.md
+     └─src
+        └─autorelase
+        │ └─autorelase.lua
+        │ └─autorelase.xml
+        │
+        └─autorelase2
+          └─autorelase2.lua
+          └─autorelase2.xml
+```
+`src`フォルダの中それぞれのフォルダ作成し、lua,xmlを作成してください(名前は同一のものをつける)  
+今回の場合はautoreleaseフォルダの下にautorelease.luaがあり、autorelease2フォルダの下にautorelease2.luaがあるといった形です
+
 
 ## 依存関係
 * [tpIpfTool](https://github.com/kuronekotei/IpfTool/releases)
@@ -38,7 +58,7 @@ nameとかreleaseTagとかは別にどうでもいいです
 * [node.js](https://nodejs.org/ja/)
 
 が必要になります
-tpIpfToolおよびghrに関しては上記リンクにバイナリが公開されているので、パスが通っているディレクトリに放り込んでください  
+tpIpfToolおよびghrに関しては上記リンクにバイナリが公開されているので、パスが通っているフォルダに放り込んでください  
 node.jsはなるべく最新のバージョンを適当にインストールしておいてください
 
 ## 使い方
