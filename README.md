@@ -43,7 +43,7 @@ node.jsはなるべく最新のバージョンを適当にインストールし�
 
 ## 使い方
 まずはGithub Releaseに放り込むために、トークンを取得します  
-このリンクから新しいトークンを作成します  
+[このリンク](https://github.com/settings/tokens)から新しいトークンを作成します  
 適当な名前とrepoにチェックを入れて作成してください  
 <img src="token.png" width="600">  
 この後トークンが生成されるのでコピーし、git configのgithub.tokenにセットします  
