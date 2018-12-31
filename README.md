@@ -67,6 +67,9 @@ Tos-Addon
 1. Travisで登録したリポジトリの設定画面を開き、Environment VariablesのNameに`GITHUB_TOKEN`,valueに先ほど生成したトークンを貼り付けてください
 1. addons.jsonを更新し、GithubにPushした段階でビルドが走り、1分ほどでReleaseにファイルが登録されます
 
+トークンはrepoにチェックを入れておいてください
+<img src="post-commit/token.png" width="600">
+
 ※ 初回ビルドは動作が不安定な場合があります。キャンセルした方がいいかもしれません。
 
 
@@ -120,7 +123,7 @@ node.jsはなるべく最新のバージョンを適当にインストールし�
 まずはGithub Releaseに放り込むために、トークンを取得します  
 https://github.com/settings/tokens から新しいトークンを作成します  
 適当な名前とrepoにチェックを入れて作成してください  
-<img src="token.png" width="600">  
+<img src="post-commit/token.png" width="600">  
 この後トークンが生成されるのでコピーし、git configのgithub.tokenにセットします  
 `git config --global github.token "....."`
 
