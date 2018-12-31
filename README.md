@@ -1,41 +1,28 @@
 # IPF-Auto-Relase
-### ToS アドオン開発者用  
-これはgitのHook機能を使い、addons.jsonが更新されたときに自動でフォルダをIPF化しGithub Releasにアップロードするものです
-いくつか依存関係やフォルダ構造の制限があるため、それを許容できる場合に使用してください。
+## ToS アドオン開発者用  
+## [Travis CI](./travis)
+Travis CIのサービスを利用した方法です
+環境などによる制限はありません  
+フォルダ構造による制限がほぼありません  
+commitをGithubにpushしたときにビルドが走り、問題なければGithub ReleaseにPushされます  
+ファイルがローカルに生成されないため、確認のためにリリースからダウンロード又はアドオンマネージャーからインストールする必要があります  
+また、Pushした段階でアドオンマネージャーに登録されるため注意してください  
 
-## フォルダ構造
-### IPF化するフォルダが一つの場合
-Tos-Addonというリポジトリで管理していて、AutoReleaseというアドオン作っている場合は
+
+### 許容可能なフォルダ構造
+Tos-Addonというリポジトリで管理していて、AutoReleaseというアドオン作っている場合は  
+
+1.
 ```
 Tos-Addon
   └AutoRelease
      │─README.md
-     └─autorelease (or src)
+     └─autorelease (or anything)
         └─autorelase.lua
         └─autorelase.xml
 ```
-というファイル構造になります  
-この時のaddons.jsonには以下のようになります
-```
-{
-    "name" : "AutoRelease",
-    "file" : "autorelase",
-    "extension" : "ipf",
-    "fileVersion" : "v1.0.0",
-    "releaseTag" : "autorelase",
-    "unicode" : "⛄",
-    "description" : "",
-    "updateInfo" :"",
-    "tags" : [
-        "ui"
-    ]
-}
-```
-lua,xmlの名前をaddons.jsonのfileの値と同じにしてください  
-fileの値.luaというファイルを検索し、その一つ前のフォルダをコピー、パックし削除するため、luaの一つ前のフォルダ名は割とどうでもいいです  
 
-
-### IPF化するフォルダが複数ある場合
+2.
 ```
 Tos-Addon
   └AutoRelease
@@ -49,22 +36,75 @@ Tos-Addon
           └─autorelase2.lua
           └─autorelase2.xml
 ```
-`src`フォルダの中それぞれのフォルダ作成し、lua,xmlを作成してください(名前は同一のものをつける)  
-今回の場合はautoreleaseフォルダの下にautorelease.luaがあり、autorelease2フォルダの下にautorelease2.luaがあるといった形です
 
-### addon.ipfとかある場合
+3.
 ```
-Muteki2ex
-└─src
-    ├─addon_d.ipf
-    │  ├─muteki2ex
-    │  └─muteki2setting
-    └─ui.ipf
-        ├─baseskinset
-        └─skin
+Tos-Addon
+  └AutoRelease
+   |─README.md
+   └─src 
+     └─addon_d.ipf
+     │  └─autorelase
+     │  │ └─autorelase.lua
+     │  │ └─autorelase.xml
+     │  │
+     │  └─autorelase2
+     │    └─autorelase2.lua
+     │    └─autorelase2.xml
+     └─ui.ipf
+      └─skin
+          └─autorelase.tga
+```
+1. 基本となる構造． luaファイルを格納するフォルダ名は何でもよい
+2. 複数のアドオンを含む構造． **src**フォルダにそれぞれのアドオンフォルダをを格納してください．必ずsrcフォルダに格納してください．
+3. addon_d.ipfとui.ipfなど複数のコンテナを含む構造． srcなどのフォルダに格納し、REMADEなどがaddon_d.ipfと同じディレクト上に含まれないように気をつけてください
 
+### 使い方
+1. [.travis.yml](travis/.travis.yml)を自分のリポジトリに保存してください
+1. https://travis-ci.org/　へアクセスしGithubのアカウントでログインしてください
+1. アドオンを管理しているリポジトリを登録してください
+1. https://github.com/settings/tokens から新しいトークンを生成してください
+1. Travisで登録したリポジトリの設定画面を開き、Environment VariablesのNameに`GITHUB_TOKEN`,valueに先ほど生成したトークンを貼り付けてください
+1. addons.jsonを更新し、GithubにPushした段階でビルドが走り、1分ほどでReleaseにファイルが登録されます
+
+※ 初回ビルドは動作が不安定な場合があります。キャンセルした方がいいかもしれません。
+
+
+## [Post-Commit \(for windows\)](./post-commit)
+gitのHook機能を使い、addons.jsonが更新されたときに自動でフォルダをIPF化しGithub Releasにアップロードするものです
+いくつか依存関係やフォルダ構造の制限があります
+コミット時生成されるため、Pushするまではアドオンマネージャーに登録されません
+
+### 許容可能なフォルダ構造
+Tos-Addonというリポジトリで管理していて、AutoReleaseというアドオン作っている場合は
+
+1. 
 ```
-### 動きません。自力でパックしてください。でもリリースはghr使うと楽ですよ。
+Tos-Addon
+  └AutoRelease
+     │─README.md
+     └─autorelease (or anything)
+        └─autorelase.lua
+        └─autorelase.xml
+```
+
+2. 
+```
+Tos-Addon
+  └AutoRelease
+     │─README.md
+     └─src
+        └─autorelase
+        │ └─autorelase.lua
+        │ └─autorelase.xml
+        │
+        └─autorelase2
+          └─autorelase2.lua
+          └─autorelase2.xml
+```
+1. 基本となる構造． luaファイルを格納するフォルダ名は何でもよい
+2. 複数のアドオンを含む構造． **src**フォルダにそれぞれのアドオンフォルダをを格納してください．必ずsrcフォルダに格納してください．
+
 
 ## 依存関係
 * [tpIpfTool](https://github.com/kuronekotei/IpfTool/releases)
@@ -78,7 +118,7 @@ node.jsはなるべく最新のバージョンを適当にインストールし�
 
 ## 使い方
 まずはGithub Releaseに放り込むために、トークンを取得します  
-[このリンク](https://github.com/settings/tokens)から新しいトークンを作成します  
+https://github.com/settings/tokens から新しいトークンを作成します  
 適当な名前とrepoにチェックを入れて作成してください  
 <img src="token.png" width="600">  
 この後トークンが生成されるのでコピーし、git configのgithub.tokenにセットします  
