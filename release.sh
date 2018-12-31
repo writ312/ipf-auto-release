@@ -29,7 +29,7 @@ node jsonDiffToCsv.js | while read row; do
             cp -r -f -P ${filePath%/*}/* temp_pack_dir/${file}/addon_d.ipf/${file}/
         fi
     fi
-    ipf temp_pack_dir/$releaseFileName temp_pack_dir/${file}
-    ghr $releaseTag temp_pack_dir/$releaseFileName
+    ipf temp_pack_dir/${releaseFileName}.ipf temp_pack_dir/${file}
+    # ghr $releaseTag temp_pack_dir/$releaseFileName
 done
-rm -rf temp_pack_dir
+# rm -rf temp_pack_dir
