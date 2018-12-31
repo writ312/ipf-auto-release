@@ -30,6 +30,6 @@ node jsonDiffToCsv.js | while read row; do
         fi
     fi
     ./libipf/ipf temp_pack_dir/${releaseFileName}.ipf temp_pack_dir/${file}
-    ghr $releaseTag temp_pack_dir/$releaseFileName
+    ghr $releaseTag ./temp_pack_dir/${releaseFileName}.ipf
 done
 # rm -rf temp_pack_dir
