@@ -1,6 +1,3 @@
-echo $LD_LIBRARY_PATH
-LD_LIBRARY_PATH=$LD_LIBRARY_PATH:`pwd`/libipf
-echo $LD_LIBRARY_PATH
 mkdir -p temp_pack_dir
 node jsonDiffToCsv.js | while read row; do
     arr=(`echo $row | tr -s ',' ' '`)
@@ -32,7 +29,7 @@ node jsonDiffToCsv.js | while read row; do
             cp -r -f -P ${filePath%/*}/* temp_pack_dir/${file}/addon_d.ipf/${file}/
         fi
     fi
-    ipf temp_pack_dir/${releaseFileName}.ipf temp_pack_dir/${file}
-    # ghr $releaseTag temp_pack_dir/$releaseFileName
+    ./libipf/ipf temp_pack_dir/${releaseFileName}.ipf temp_pack_dir/${file}
+    ghr $releaseTag temp_pack_dir/$releaseFileName
 done
 # rm -rf temp_pack_dir
