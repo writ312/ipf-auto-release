@@ -1,3 +1,6 @@
+echo $LD_LIBRARY_PATH
+LD_LIBRARY_PATH=$LD_LIBRARY_PATH:`pwd`/libipf
+echo $LD_LIBRARY_PATH
 mkdir -p temp_pack_dir
 node jsonDiffToCsv.js | while read row; do
     arr=(`echo $row | tr -s ',' ' '`)
