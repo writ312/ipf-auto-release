@@ -59,9 +59,9 @@ Tos-Addon
 
 ### 使い方
 1. [.travis.yml](travis/.travis.yml)を自分のリポジトリに保存してください
-1. https://travis-ci.org/　へアクセスしGithubのアカウントでログインしてください
+1. [https://travis-ci.org](https://travis-ci.org)へアクセスしGithubのアカウントでログインしてください
 1. アドオンを管理しているリポジトリを登録してください
-1. https://github.com/settings/tokens から新しいトークンを生成してください
+1. [https://github.com/settings/tokens](https://github.com/settings/tokens) から新しいトークンを生成してください
 1. Travisで登録したリポジトリの設定画面を開き、Environment VariablesのNameに`GITHUB_TOKEN`,valueに先ほど生成したトークンを貼り付けてください
 1. addons.jsonを更新し、GithubにPushした段階でビルドが走り、1分ほどでReleaseにファイルが登録されます
 
