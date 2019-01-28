@@ -17,6 +17,7 @@ node jsonDiffToCsv.js | while read row; do
         # ex)addon_d.ipf/hoge/hoge.lua
         # ex)ui.ipf/skin/hoge.tga
         cp -r -f ${filePath%/addon_d.*} temp_pack_dir/${file}
+        ls temp_pack_dir/${file}/* -dF | grep -v /$ | xargs rm
     else
     
         if [[ $filePath =~  src\/.+\/.+\.lua ]] ; then
