@@ -41,6 +41,7 @@ diff --old-line-format=''  --new-line-format='%L' --unchanged-line-format='' <(a
         # ex)ui.ipf/skin/hoge.tga
         cp -r -f ${filePath%/addon_d.*} temp_pack_dir/${file}
         ls temp_pack_dir/${file}/* -dF | grep -v /$ | xargs rm
+        ls temp_pack_dir/${file}/* -dF | grep -v ipf/$ | xargs rm -r
     else
     
         if [[ $filePath =~  src\/.+\/.+\.lua ]] ; then
