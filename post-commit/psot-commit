@@ -1,0 +1,62 @@
+#!/bin/bash
+rm -rf temp_pack_dir
+mkdir -p temp_pack_dir
+mkdir -p ReleasedIPF
+echo 'BEGIN {
+    RS=","
+    FS=":"
+    files[0] = "file"
+    fileVersions[0] = "fileVersion"
+    releaseTags[0] = "releaseTag"    
+
+}
+{
+    if($1 ~ /\"file\"/ && $2!="") files[length(files)] = $2
+    if($1 ~ /\"fileVersion\"/ && $2!="") fileVersions[length(fileVersions)] = $2
+    if($1 ~ /\"releaseTag\"/ && $2!="") releaseTags[length(releaseTags)] = $2
+}
+END {
+    len = length(files)
+    if(length(files)==length(fileVersions) && length(files)==length(releaseTags))
+        for(i = 1; i < len; i++){
+            print files[i] "," fileVersions[i] "," releaseTags[i]
+        };
+}' > temp_pack_dir/csv2json_awk.awk
+git show HEAD~:addons.json > temp_pack_dir/old_addons.json
+diff --old-line-format=''  --new-line-format='%L' --unchanged-line-format='' <(awk -f temp_pack_dir/csv2json_awk.awk temp_pack_dir/old_addons.json | sort) <(awk -f temp_pack_dir/csv2json_awk.awk addons.json |sort) | tr -d '"' | while read row; do
+    arr=(`echo $row | tr -s ',' ' '`)
+    file=${arr[0]}
+    version=${arr[1]}
+    releaseTag=${arr[2]}
+    fileName=${file}.lua
+    releaseFileName=${file}-${version}
+    filePath=$(find -name $fileName)
+    if [ -z "$filePath" ] ; then
+        echo ${fileName}がみつかりません
+        continue
+    fi
+    depth=1
+    if [[ $filePath =~ addon_d\.ipf ]] ; then
+        # ex)addon_d.ipf/hoge/hoge.lua
+        # ex)ui.ipf/skin/hoge.tga
+        cp -r -f ${filePath%/addon_d.*} temp_pack_dir/${file}
+        ls temp_pack_dir/${file}/* -dF | grep -v /$ | xargs rm
+    else
+    
+        if [[ $filePath =~  src\/.+\/.+\.lua ]] ; then
+            # ex)src/hoge/hoge.lua    
+            # ex)src/foo/foo.lua    
+            mkdir -p temp_pack_dir/${file}/addon_d.ipf
+            cp -r -f ${filePath%/*/*}/* temp_pack_dir/${file}/addon_d.ipf/
+        else
+            mkdir -p temp_pack_dir/${file}/addon_d.ipf/${file}/
+            cp -r -f -P ${filePath%/*}/* temp_pack_dir/${file}/addon_d.ipf/${file}/
+        fi
+    fi
+    fileList=$(ls temp_pack_dir/$file |sed 's/^/temp_pack_dir\/'$file'\//' | tr '\n' ' ')
+    tpIpfTool.exe $fileList --name temp_pack_dir/$releaseFileName
+    # ghr $releaseTag ./temp_pack_dir/${releaseFileName}.ipf
+    mv ./temp_pack_dir/${releaseFileName}.ipf ReleasedIPF/
+    echo $releaseFileName を ReleasedIPFに移動しました
+done
+rm -rf temp_pack_dir
