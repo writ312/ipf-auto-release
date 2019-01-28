@@ -74,9 +74,9 @@ Tos-Addon
 
 
 ## [Post-Commit \(for windows\)](./post-commit)
-gitのHook機能を使い、addons.jsonが更新されたときに自動でフォルダをIPF化しGithub Releasにアップロードするものです
-いくつか依存関係があります
-コミット時生成されるため、Pushするまではアドオンマネージャーに登録されません
+gitのHook機能を使い、addons.jsonが更新されたときに自動でフォルダをIPF化しGithub Releasにアップロードするものです  
+いくつか依存関係があります  
+コミット時生成されるため、Pushするまではアドオンマネージャーに登録されません  
 
 ## フォルダ構造
 Tos-Addonというリポジトリで管理していて、AutoReleaseというアドオン作っている場合は  

@@ -1,7 +1,7 @@
 # IPF-Auto-Relase
 ### ToS アドオン開発者用  
-これはgitのHook機能を使い、addons.jsonが更新されたときに自動でフォルダをIPF化しGithub Releasにアップロードするものです
-いくつか依存関係やフォルダ構造の制限があるため、それを許容できる場合に使用してください。
+これはgitのHook機能を使い、addons.jsonが更新されたときに自動でフォルダをIPF化しGithub Releasにアップロードするものです  
+いくつか依存関係やフォルダ構造の制限があるため、それを許容できる場合に使用してください。  
 
 ## フォルダ構造
 Tos-Addonというリポジトリで管理していて、AutoReleaseというアドオン作っている場合は  
@@ -51,10 +51,10 @@ Tos-Addon
 ```
 
 ## 依存関係
-* [tpIpfTool v2.2](https://github.com/kuronekotei/IpfTool/releases)
-* [ghr](https://github.com/tcnksm/ghr/releases)
-* git bash
-が必要になります
+* [tpIpfTool v2.2](https://github.com/kuronekotei/IpfTool/releases)  
+* [ghr](https://github.com/tcnksm/ghr/releases)  
+* git bash  
+が必要になります  
 tpIpfToolおよびghrに関しては上記リンクにバイナリが公開されているので、環境変数のパスが通っているフォルダに放り込んでください  
 また、`git push`はgit bashで実行してください(cmd.exe,powershellでは動きません)
 
